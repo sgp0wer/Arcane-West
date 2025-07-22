@@ -12,6 +12,8 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private float aimSensivity;
     [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
     [SerializeField] private Transform debugTransform;
+    [SerializeField] private Transform pfBulletProjectile;
+    [SerializeField] private Transform spawnBulletPosition;
 
 private ThirdPersonController thirdPersonController; 
     private StarterAssetsInputs starterAssetsInputs;
@@ -25,8 +27,8 @@ private ThirdPersonController thirdPersonController;
     // Update is called once per frame
     void Update()
     {
-         Vector3 mouseWorldPosition = Vector3.zero;
-         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Vector3 mouseWorldPosition = Vector3.zero;
+        Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
         {
@@ -52,6 +54,13 @@ private ThirdPersonController thirdPersonController;
             thirdPersonController.SetSensitivity(normalSensivity);
             thirdPersonController.SetRotateOnMove(true);
 
+        }
+
+        if (starterAssetsInputs.shoot)
+        {
+            Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
+            Instantiate(pfBulletProjectile, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
+            starterAssetsInputs.shoot = false;
         }
         
     }

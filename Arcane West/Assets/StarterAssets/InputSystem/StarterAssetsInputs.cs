@@ -13,6 +13,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool aim;
+		public bool shoot;
 
 
 		[Header("Movement Settings")]
@@ -49,13 +50,18 @@ namespace StarterAssets
 		{
 			AimInput(value.isPressed);
 		}
+
+		public void OnShoot(InputValue value)
+		{
+			ShootInput(value.isPressed);
+		}
 #endif
 
 
 		public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
-		} 
+		}
 
 		public void LookInput(Vector2 newLookDirection)
 		{
@@ -75,6 +81,10 @@ namespace StarterAssets
 		{
 			aim = newAimState;
 		}
+		public void ShootInput(bool newShootState)
+		{
+			shoot = newShootState;
+		}
 
 		private void OnApplicationFocus(bool hasFocus)
 		{
@@ -85,6 +95,7 @@ namespace StarterAssets
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
+
 	}
 	
 }

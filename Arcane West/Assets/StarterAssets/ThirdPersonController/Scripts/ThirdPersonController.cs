@@ -14,6 +14,13 @@ namespace StarterAssets
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
+        public float[] SprintSpeedLevels = { 3f, 4.3f, 5f, 6f };
+        private ShopManager shopManager;
+        int SprintSpeedUpgradeLevel = 0;
+
+        public float[] JumpHeightLevels = { 0.8f, 1.0f, 1.2f, 1.5f };
+        int JumpHeightUpgradeLevel = 0;
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
@@ -134,7 +141,7 @@ namespace StarterAssets
             }
         }
 
-        private void Start()
+        public void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
@@ -146,6 +153,17 @@ namespace StarterAssets
 #else
             Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
+            shopManager = FindFirstObjectByType<ShopManager>();
+            if (shopManager != null)
+                SprintSpeedUpgradeLevel = shopManager.GetCurrentLevel(1);
+            SprintSpeed = SprintSpeedLevels[SprintSpeedUpgradeLevel] + SprintSpeed;
+
+            shopManager = FindFirstObjectByType<ShopManager>();
+            if (shopManager != null)
+                JumpHeightUpgradeLevel = shopManager.GetCurrentLevel(2);
+            JumpHeight = JumpHeightLevels[JumpHeightUpgradeLevel] + JumpHeight;
+
+
 
             AssignAnimationIDs();
 
@@ -402,6 +420,18 @@ namespace StarterAssets
         public void SetRotateOnMove(bool newRotateOnMove)
         {
             _rotateOnMove = newRotateOnMove;
+        }
+
+        public void ApplySprintSpeedUpgrade(int newLevel)
+        {
+            int level = shopManager.GetCurrentLevel(1);
+            SprintSpeed += SprintSpeedLevels[level];
+        }
+
+        public void ApplyJumpHeightUpgrade(int newLevel)
+        {
+            int level = shopManager.GetCurrentLevel(2);
+            JumpHeight += JumpHeightLevels[level];
         }
     }
 }
